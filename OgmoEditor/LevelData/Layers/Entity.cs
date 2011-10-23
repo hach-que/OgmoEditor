@@ -43,8 +43,12 @@ namespace OgmoEditor.LevelData.Layers
 
             if (Definition.ResizableX)
                 Size.Width = Convert.ToInt32(xml.Attributes["width"].InnerText);
+            else
+                Size.Width = Definition.Size.Width;
             if (Definition.ResizableY)
-                Size.Height = Convert.ToInt32(xml.Attributes["height"].InnerText);                
+                Size.Height = Convert.ToInt32(xml.Attributes["height"].InnerText);
+            else
+                Size.Height = Definition.Size.Height;
 
             if (Definition.Rotatable)
                 Angle = Ogmo.Project.ImportAngle(xml.Attributes["angle"].InnerText);
