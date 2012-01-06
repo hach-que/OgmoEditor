@@ -28,7 +28,7 @@ namespace OgmoEditor.LevelData.Layers
             Definition = definition;
             Tileset = Ogmo.Project.Tilesets[0];
 
-            Tiles = new int[Level.Size.Width / definition.Grid.Width, Level.Size.Height / definition.Grid.Height];
+            Tiles = new int[Math.Max(Level.Size.Width / definition.Grid.Width, 1), Math.Max(Level.Size.Height / definition.Grid.Height, 1)];
             Clear();
 
             InitCanvas();
@@ -61,7 +61,9 @@ namespace OgmoEditor.LevelData.Layers
                 {
                     string[] tiles = new string[Tiles.GetLength(0)];
                     for (int j = 0; j < Tiles.GetLength(0); j++)
+                    {
                         tiles[j] = Tiles[j, i].ToString();
+                    }
                     rows[i] = string.Join(",", tiles);
                 }
 
@@ -154,9 +156,11 @@ namespace OgmoEditor.LevelData.Layers
                 string s = xml.InnerText;
 
                 string[] rows = s.Split('\n');
+                if (rows.Length > Tiles.GetLength(1)) Array.Resize(ref rows, Tiles.GetLength(1));
                 for (int i = 0; i < rows.Length; i++)
                 {
                     string[] tiles = rows[i].Split(',');
+                    if (tiles.Length > Tiles.GetLength(0)) Array.Resize(ref tiles, Tiles.GetLength(0));
                     if (tiles[0] != "")
                         for (int j = 0; j < tiles.Length; j++)
                             Tiles[j, i] = Convert.ToInt32(tiles[j]);
