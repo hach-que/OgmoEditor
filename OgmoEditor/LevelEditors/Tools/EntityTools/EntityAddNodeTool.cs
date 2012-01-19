@@ -29,15 +29,18 @@ namespace OgmoEditor.LevelEditors.Tools.EntityTools
             if (Ogmo.EntitySelectionWindow.Selected.Count == 1)
             {
                 Entity e = Ogmo.EntitySelectionWindow.Selected[0];
-                if (e.Nodes.Contains(node))
+                if (e.Definition.NodesDefinition.Enabled)
                 {
-                    moving = true;
-                    moveEntity = e;
-                    moveIndex = e.Nodes.FindIndex(p => p == node);
-                }
-                else if (e.Nodes.Count != e.Definition.NodesDefinition.Limit)
-                {
-                    LevelEditor.Perform(new EntityAddNodeAction(LayerEditor.Layer, e, node));
+                    if (e.Nodes.Contains(node))
+                    {
+                        moving = true;
+                        moveEntity = e;
+                        moveIndex = e.Nodes.FindIndex(p => p == node);
+                    }
+                    else if (e.Nodes.Count != e.Definition.NodesDefinition.Limit)
+                    {
+                        LevelEditor.Perform(new EntityAddNodeAction(LayerEditor.Layer, e, node));
+                    }
                 }
             }
             else
