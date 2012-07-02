@@ -14,6 +14,7 @@ using OgmoEditor.LevelData;
 using OgmoEditor.Windows;
 using System.IO;
 using OgmoEditor.Plugin;
+using System.Deployment.Application;
 
 namespace OgmoEditor
 {
@@ -35,7 +36,7 @@ namespace OgmoEditor
             Ogmo.PluginLoader.FireAttachMenus(this.MainMenuStrip);
 
             //Start maximized?
-            if (Config.ConfigFile.StartMaximized)
+            if (Properties.Settings.Default.StartMaximized)
                 WindowState = FormWindowState.Maximized;
 
             EditingGridVisible = true;
@@ -101,7 +102,7 @@ namespace OgmoEditor
         private int SelectedLevelIndex
         {
             get { return MasterTabControl.SelectedIndex; }
-            set { MasterTabControl.SelectedIndex = value; }
+            set {  MasterTabControl.SelectedIndex = value; }
         }
 
         public Rectangle EditBounds
@@ -245,6 +246,14 @@ namespace OgmoEditor
             PreferencesWindow pref = new PreferencesWindow();
             DisableEditing();
             pref.Show(this);
+        }
+
+        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ApplicationDeployment.IsNetworkDeployed)
+                ApplicationDeployment.CurrentDeployment.CheckForUpdate();
+            else
+                MessageBox.Show(this, "You cannot check for updates while debugging Ogmo Editor!", "Nope!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

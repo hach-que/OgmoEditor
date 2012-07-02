@@ -18,6 +18,7 @@ using OgmoEditor.Definitions;
 using OgmoEditor.ProjectEditors;
 using OgmoEditor.LevelEditors;
 using SerializeDictionary;
+using System.Deployment.Application;
 
 namespace OgmoEditor
 {
@@ -27,6 +28,7 @@ namespace OgmoEditor
         public enum AngleExportMode { Radians, Degrees };
 
         //Serialized project properties
+        public string OgmoVersion;
         public string Name;
         public OgmoColor BackgroundColor;
         public OgmoColor GridColor;
@@ -81,6 +83,7 @@ namespace OgmoEditor
         public void CloneFrom(Project copy)
         {
             //Default project properties
+            OgmoVersion = copy.OgmoVersion;
             Name = copy.Name;
             BackgroundColor = copy.BackgroundColor;
             GridColor = copy.GridColor;
@@ -180,6 +183,9 @@ namespace OgmoEditor
 
             foreach (var o in EntityDefinitions)
             {
+                //Check Entity values for reserved words
+                s += OgmoParse.CheckEntityValues(o, o.ValueDefinitions);
+
                 //Image file must exist if it is using an image file to draw
                 if (o.ImageDefinition.DrawMode == EntityImageDefinition.DrawModes.Image)
                     s += OgmoParse.CheckPath(o.ImageDefinition.ImagePath, SavedDirectory, "Object \"" + o.Name + "\" image file");
@@ -188,6 +194,12 @@ namespace OgmoEditor
                 if (o.ImageDefinition.Tiled && o.ImageDefinition.DrawMode == EntityImageDefinition.DrawModes.Image && o.Rotatable)
                     s += OgmoParse.Error("Object \"" + o.Name + "\" has a tiled image and is rotatable. These features are incompatible in this version of Ogmo Editor");
             }
+
+            /*
+             *  VALUES
+             */
+
+            s += OgmoParse.CheckLevelValues(LevelValueDefinitions);
 
             return s;
         }
@@ -209,24 +221,6 @@ namespace OgmoEditor
         public string GetPath(string path)
         {
             return SavedDirectory + Path.DirectorySeparatorChar + path;
-        }
-
-        [XmlIgnore]
-        public bool ExportWidth
-        {
-            get
-            {
-                return LevelMinimumSize.Width != LevelDefaultSize.Width || LevelMaximumSize.Width != LevelDefaultSize.Width;
-            }
-        }
-
-        [XmlIgnore]
-        public bool ExportHeight
-        {
-            get
-            {
-                return LevelMinimumSize.Height != LevelDefaultSize.Height || LevelMaximumSize.Height != LevelDefaultSize.Height;
-            }
         }
 
         public string ExportAngle(float angle)
@@ -286,6 +280,12 @@ namespace OgmoEditor
 
         private void writeTo(string filename)
         {
+            //Set the current Ogmo Editor version in the project file
+            if (ApplicationDeployment.IsNetworkDeployed)
+                OgmoVersion = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            else
+                OgmoVersion = new Version(1, 0).ToString();
+
             XmlSerializer xs = new XmlSerializer(typeof(Project));
             Stream stream = new FileStream(filename, FileMode.Create);
             xs.Serialize(stream, this);

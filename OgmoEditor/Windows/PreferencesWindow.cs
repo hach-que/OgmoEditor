@@ -18,31 +18,43 @@ namespace OgmoEditor.Windows
 
         private void PreferencesWindow_Shown(object sender, EventArgs e)
         {
-            maximizeCheckBox.Checked = Config.ConfigFile.StartMaximized;
-            undoLimitTextBox.Text = Config.ConfigFile.UndoLimit.ToString();
-            levelLimitTextBox.Text = Config.ConfigFile.LevelLimit.ToString();
-            this.c_PluginPathTextBox.Text = Config.ConfigFile.PluginPath;
+            maximizeCheckBox.Checked = Properties.Settings.Default.StartMaximized;
+            undoLimitTextBox.Text = Properties.Settings.Default.UndoLimit.ToString();
+            levelLimitTextBox.Text = Properties.Settings.Default.LevelLimit.ToString();
+            this.c_PluginPathTextBox.Text = Properties.Settings.Default.PluginPath;
 
-            clearHistoryButton.Enabled = Config.ConfigFile.RecentProjects.Count > 0;
+            clearHistoryButton.Enabled = Properties.Settings.Default.RecentProjects.Count > 0;
         }
 
         private void PreferencesWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            bool restartRequired = (Config.ConfigFile.PluginPath != this.c_PluginPathTextBox.Text);
-            Config.ConfigFile.StartMaximized = maximizeCheckBox.Checked;
-            Config.ConfigFile.PluginPath = this.c_PluginPathTextBox.Text;
-            OgmoParse.Parse(ref Config.ConfigFile.UndoLimit, undoLimitTextBox);
-            OgmoParse.Parse(ref Config.ConfigFile.LevelLimit, levelLimitTextBox);
+            bool restartRequired = (Properties.Settings.Default.PluginPath != this.c_PluginPathTextBox.Text);
+            Properties.Settings.Default.StartMaximized = maximizeCheckBox.Checked;
+            Properties.Settings.Default.PluginPath = this.c_PluginPathTextBox.Text;
             if (restartRequired)
-                MessageBox.Show("You must restart Ogmo Editor for the changes to take effect.");
+                MessageBox.Show("You must restart Ogmo Editor for the changes to take effect.", "Restart Required");
 
-            Config.Save();
+            try
+            {
+                Properties.Settings.Default.UndoLimit = Convert.ToInt32(undoLimitTextBox.Text);
+            }
+            catch
+            { }
+
+            try
+            {
+                Properties.Settings.Default.LevelLimit = Convert.ToInt32(levelLimitTextBox.Text);
+            }
+            catch
+            { }
+
+            Properties.Settings.Default.Save();
             Ogmo.MainWindow.EnableEditing();
         }
 
         private void clearHistoryButton_Click(object sender, EventArgs e)
         {
-            Config.ConfigFile.ClearRecentProjects();
+            Ogmo.ClearRecentProjects();
             clearHistoryButton.Enabled = false;
         }
 
