@@ -265,6 +265,9 @@
     <Compile Include="LevelEditors\ValueEditors\ValueEditor.Designer.cs">
       <DependentUpon>ValueEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Plugin\IPlugin.cs" />
+    <Compile Include="Plugin\PluginLoader.cs" />
+    <Compile Include="SerializeDictionary.cs" />
     <Compile Include="Windows\AboutWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -705,6 +708,12 @@
       <Progid>ProjectFile</Progid>
       <DefaultIcon>proj32.ico</DefaultIcon>
     </FileAssociation>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OgmoEditor.Protogame\OgmoEditor.Protogame.csproj">
+      <Project>{59B73158-7249-4F8C-85C4-08522C06C98A}</Project>
+      <Name>OgmoEditor.Protogame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

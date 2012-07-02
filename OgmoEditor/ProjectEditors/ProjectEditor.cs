@@ -35,6 +35,9 @@ namespace OgmoEditor.ProjectEditors
             tilesetsEditor.LoadFromProject(newProject);
             objectsEditor.LoadFromProject(newProject);
 
+            //Plugins
+            Ogmo.PluginLoader.FireEditProject(this, newProject);
+
             //Events
             FormClosed += onClose;
         }
@@ -75,6 +78,11 @@ namespace OgmoEditor.ProjectEditors
 
             //Close the project editor
             Close();
+        }
+
+        internal void AddTab(TabPage tab)
+        {
+            this.tabControl.TabPages.Add(tab);
         }
     }
 }

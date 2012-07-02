@@ -46,13 +46,19 @@ namespace OgmoEditor.Windows
             Shown += onShown;
             Resize += enforceSnap;
             Move += checkSnap;
-            Ogmo.MainWindow.Resize += enforceSnap;
-            Ogmo.MainWindow.LocationChanged += enforceSnap;
-            Ogmo.MainWindow.KeyDown += onKeyDown;
+            if (Ogmo.MainWindow != null)
+            {
+                Ogmo.MainWindow.Resize += enforceSnap;
+                Ogmo.MainWindow.LocationChanged += enforceSnap;
+                Ogmo.MainWindow.KeyDown += onKeyDown;
+            }
             KeyDown += onKeyDown;
-            Ogmo.OnProjectClose += onProjectClose;
-            Ogmo.OnLevelClosed += onLevelClose;
-            Ogmo.OnLevelChanged += new Ogmo.LevelCallback(Ogmo_OnLevelChanged);
+            if (Ogmo.MainWindow != null)
+            {
+                Ogmo.OnProjectClose += onProjectClose;
+                Ogmo.OnLevelClosed += onLevelClose;
+                Ogmo.OnLevelChanged += new Ogmo.LevelCallback(Ogmo_OnLevelChanged);
+            }
         }
 
         void Ogmo_OnLevelChanged(int index)
@@ -103,6 +109,9 @@ namespace OgmoEditor.Windows
          */
         private void checkSnap(object sender = null, EventArgs e = null)
         {
+            if (Ogmo.MainWindow == null)
+                return;
+
             Rectangle r = Ogmo.MainWindow.EditBounds;
             Point p = Location;
 
@@ -139,6 +148,9 @@ namespace OgmoEditor.Windows
 
         private void enforceSnap(object sender = null, EventArgs e = null)
         {
+            if (Ogmo.MainWindow == null)
+                return;
+            
             Rectangle r = Ogmo.MainWindow.EditBounds;
             Point p = Location;
 
@@ -189,7 +201,8 @@ namespace OgmoEditor.Windows
             {
                 e.Cancel = true;
                 UserVisible = false;
-                Ogmo.MainWindow.Focus();
+                if (Ogmo.MainWindow != null)
+                    Ogmo.MainWindow.Focus();
             }
         }
     }

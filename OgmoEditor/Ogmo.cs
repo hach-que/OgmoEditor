@@ -21,6 +21,7 @@ using Microsoft.Xna.Framework.Graphics;
 using OgmoEditor.Clipboard;
 using System.Xml;
 using System.Net;
+using OgmoEditor.Plugin;
 
 namespace OgmoEditor
 {
@@ -46,6 +47,7 @@ namespace OgmoEditor
         static public PresentationParameters Parameters;
         static public GraphicsDevice GraphicsDevice { get; private set; }
         static public EditorDraw EditorDraw { get; private set; }
+        static public PluginLoader PluginLoader { get; private set; }
 
         static public MainWindow MainWindow { get; private set; }
         static public ToolsWindow ToolsWindow { get; private set; }
@@ -90,6 +92,9 @@ namespace OgmoEditor
             //Load the config file
             Config.Load();
 
+            //Load the plugins
+            Ogmo.PluginLoader = new PluginLoader(Config.ConfigFile.PluginPath);
+
             //The levels holder
             Levels = new List<Level>();
             CurrentLevelIndex = -1;
@@ -128,6 +133,8 @@ namespace OgmoEditor
 
         static void MainWindow_Shown(object sender, EventArgs e)
         {
+            PluginLoader.FireStart();
+
             if (toLoad != "")
             {
                 LoadProject(toLoad);
@@ -137,6 +144,8 @@ namespace OgmoEditor
 
         static void onApplicationExit(object sender, EventArgs e)
         {
+            PluginLoader.FireShutdown();
+
             Config.Save();
         }
 
@@ -163,6 +172,7 @@ namespace OgmoEditor
                 StartProject(Project);
                 EditProject(ProjectEditMode.NewProject);
             }
+            PluginLoader.FireNewProject(Project);
         }
 
         static public void LoadProject()
@@ -198,6 +208,7 @@ namespace OgmoEditor
                 MessageBox.Show(MainWindow, "Project could not be loaded because of the following errors:\n" + errors + "\nFix the errors to continue with loading.");
                 EditProject(ProjectEditMode.ErrorOnLoad);
             }
+            PluginLoader.FireLoadProject(Project);
         }
 
         static public void StartProject(Project project)
@@ -213,6 +224,7 @@ namespace OgmoEditor
 
         static public void CloseProject()
         {
+            PluginLoader.FireUnloadProject();
             //Close all the open levels
             CloseAllLevels();
 
@@ -243,6 +255,7 @@ namespace OgmoEditor
                 if (MessageBox.Show(MainWindow, "Warning: All levels must be closed if any changes to the project are made. You have unsaved changes in some open levels which will be lost. Still edit the project?", "Warning!", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
                     return;
             }
+            PluginLoader.FireUnloadProject();
 
             //Disable the main window
             MainWindow.DisableEditing();
@@ -298,6 +311,8 @@ namespace OgmoEditor
                 Config.ConfigFile.UpdateRecentProjects(Project);
                 GC.Collect();
             }
+
+            PluginLoader.FireLoadProject(Project);
         }
 
         /*
@@ -322,6 +337,11 @@ namespace OgmoEditor
 
             //Make it current
             CurrentLevelIndex = index;
+
+            if (CurrentLevelIndex == -1)
+                PluginLoader.FireSwitchLevel(null);
+            else
+                PluginLoader.FireSwitchLevel(Levels[CurrentLevelIndex]);
 
             //Call the event
             if (OnLevelChanged != null)

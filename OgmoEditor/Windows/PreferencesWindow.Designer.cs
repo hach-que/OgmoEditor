@@ -36,6 +36,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.levelLimitTextBox = new System.Windows.Forms.TextBox();
+            this.c_PluginPathTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.c_BrowseButton = new System.Windows.Forms.Button();
+            this.c_BrowseFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // maximizeCheckBox
@@ -67,7 +71,7 @@
             // 
             // doneButton
             // 
-            this.doneButton.Location = new System.Drawing.Point(197, 122);
+            this.doneButton.Location = new System.Drawing.Point(197, 193);
             this.doneButton.Name = "doneButton";
             this.doneButton.Size = new System.Drawing.Size(75, 23);
             this.doneButton.TabIndex = 4;
@@ -100,11 +104,40 @@
             this.levelLimitTextBox.Size = new System.Drawing.Size(52, 20);
             this.levelLimitTextBox.TabIndex = 7;
             // 
+            // c_PluginPathTextBox
+            // 
+            this.c_PluginPathTextBox.Location = new System.Drawing.Point(12, 154);
+            this.c_PluginPathTextBox.Name = "c_PluginPathTextBox";
+            this.c_PluginPathTextBox.Size = new System.Drawing.Size(231, 20);
+            this.c_PluginPathTextBox.TabIndex = 9;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 131);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(63, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Plugin path:";
+            // 
+            // c_BrowseButton
+            // 
+            this.c_BrowseButton.Location = new System.Drawing.Point(249, 154);
+            this.c_BrowseButton.Name = "c_BrowseButton";
+            this.c_BrowseButton.Size = new System.Drawing.Size(23, 19);
+            this.c_BrowseButton.TabIndex = 10;
+            this.c_BrowseButton.Text = "...";
+            this.c_BrowseButton.UseVisualStyleBackColor = true;
+            this.c_BrowseButton.Click += new System.EventHandler(this.c_BrowseButton_Click);
+            // 
             // PreferencesWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 155);
+            this.ClientSize = new System.Drawing.Size(284, 228);
+            this.Controls.Add(this.c_BrowseButton);
+            this.Controls.Add(this.c_PluginPathTextBox);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.levelLimitTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -134,5 +167,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox levelLimitTextBox;
+        private System.Windows.Forms.TextBox c_PluginPathTextBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button c_BrowseButton;
+        private System.Windows.Forms.FolderBrowserDialog c_BrowseFolder;
     }
 }

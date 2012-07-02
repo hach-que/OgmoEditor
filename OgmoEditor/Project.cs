@@ -17,6 +17,7 @@ using OgmoEditor.Definitions.ValueDefinitions;
 using OgmoEditor.Definitions;
 using OgmoEditor.ProjectEditors;
 using OgmoEditor.LevelEditors;
+using SerializeDictionary;
 
 namespace OgmoEditor
 {
@@ -37,6 +38,7 @@ namespace OgmoEditor
         public bool CameraEnabled;
         public Size CameraSize;
         public bool ExportCameraPosition;
+        public SerializableDictionary<string, string> CustomPluginEntries;
 
         //Definitions
         public List<ValueDefinition> LevelValueDefinitions;
@@ -58,6 +60,7 @@ namespace OgmoEditor
             CameraEnabled = false;
             CameraSize = new Size(640, 480);
             ExportCameraPosition = false;
+            CustomPluginEntries = new SerializableDictionary<string, string>();
 
             //Definitions
             LevelValueDefinitions = new List<ValueDefinition>();
@@ -89,8 +92,13 @@ namespace OgmoEditor
             CameraEnabled = copy.CameraEnabled;
             CameraSize = copy.CameraSize;
             ExportCameraPosition = copy.ExportCameraPosition;
+            CustomPluginEntries = copy.CustomPluginEntries;
 
             //Definitions
+            CustomPluginEntries = new SerializableDictionary<string, string>();
+            foreach (var d in copy.CustomPluginEntries)
+                CustomPluginEntries.Add(d.Key, d.Value);
+
             LevelValueDefinitions = new List<ValueDefinition>();
             foreach (var d in copy.LevelValueDefinitions)
                 LevelValueDefinitions.Add(d.Clone());

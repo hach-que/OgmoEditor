@@ -13,6 +13,7 @@ using System.Diagnostics;
 using OgmoEditor.LevelData;
 using OgmoEditor.Windows;
 using System.IO;
+using OgmoEditor.Plugin;
 
 namespace OgmoEditor
 {
@@ -30,6 +31,8 @@ namespace OgmoEditor
         public MainWindow()
         {
             InitializeComponent();
+
+            Ogmo.PluginLoader.FireAttachMenus(this.MainMenuStrip);
 
             //Start maximized?
             if (Config.ConfigFile.StartMaximized)

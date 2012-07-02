@@ -18,7 +18,7 @@ namespace OgmoEditor.LevelData.Layers
             Layer = layer;
             Area = area;
 
-            Under = new int[area.Width, area.Height];
+            Under = new int[Math.Max(area.Width, 0), Math.Max(area.Height, 0)];
             for (int i = 0; i < area.Width; i++)
                 for (int j = 0; j < area.Height; j++)
                     Under[i, j] = -1;

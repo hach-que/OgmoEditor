@@ -38,6 +38,11 @@ namespace OgmoEditor
             }
         }
 
+        static public string GetPluginConfigPath(string pluginName)
+        {
+            return Path.Combine(Ogmo.ProgramDirectory, "config-" + pluginName + ".xml");
+        }
+
         /*
          *  The actual config file
          */
@@ -45,6 +50,7 @@ namespace OgmoEditor
         public bool StartMaximized;
         public int UndoLimit;
         public int LevelLimit;
+        public string PluginPath;
 
         private Config()
         {
@@ -52,6 +58,7 @@ namespace OgmoEditor
             StartMaximized = false;
             UndoLimit = 30;
             LevelLimit = 15;
+            PluginPath = "";
         }
 
         public void ClearRecentProjects()
